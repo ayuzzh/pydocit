@@ -16,7 +16,6 @@ class Visitor(ast.NodeVisitor):
         self.current_function = None
 
     def visit_ClassDef(self, node):
-
         bases = []
         for i in node.bases:
             bases.append(astunparse.unparse(i))

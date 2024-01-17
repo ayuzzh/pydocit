@@ -11,11 +11,11 @@ class Builder:
     all the docstring extracted from the package selected."""
 
     def __init__(
-            self,
-            name: str,
-            path: str,
-            exclude_directories: Optional[List[str]] = None,
-            recursive_search: bool = True,
+        self,
+        name: str,
+        path: str,
+        exclude_directories: Optional[List[str]] = None,
+        recursive_search: bool = True,
     ):
         self.name = name
         self.path: str = path
@@ -35,7 +35,9 @@ class Builder:
         list_of_directories = [d for d in os.listdir(path)]
 
         is_this_a_package = False
-        if "__init__.py" in list_of_directories and os.path.isfile(os.path.join(path, "__init__.py")):
+        if "__init__.py" in list_of_directories and os.path.isfile(
+            os.path.join(path, "__init__.py")
+        ):
             is_this_a_package = True
             self.included_packages.append(path)
         else:
@@ -43,11 +45,13 @@ class Builder:
 
         for i in list_of_directories:
             if i.endswith(".py"):
-                self.files.append({
-                    "name": i,
-                    "is_in_package": is_this_a_package,
-                    "path": os.path.join(path, i)
-                })
+                self.files.append(
+                    {
+                        "name": i,
+                        "is_in_package": is_this_a_package,
+                        "path": os.path.join(path, i),
+                    }
+                )
             elif os.path.isdir(os.path.join(path, i)):
                 if not i.startswith("."):
                     if i not in self.exclude_directories:
@@ -62,7 +66,6 @@ class Builder:
         self.final_build["content"] = {}
 
         for i in self.files:
-
             visitor = Visitor()
             with open(i["path"], encoding="utf8") as file:
                 print(i["path"])
@@ -75,10 +78,6 @@ class Builder:
                 "path": i["path"],
                 "docs": visitor.out(),
             }
-
-
-
-
 
     def build(self) -> str:
         self.find_directories(self.path)
