@@ -119,6 +119,30 @@ class ItalicText(Token):
 
 
 class Lexer:
+    """
+    This class parses the md markup text and converts in into
+    a simple tree which can be used to converted into html or pdf
+    according to the requirement.
+
+    The parsing occurs in order
+    1. Heading1
+    2. Heading2
+    3. Heading3
+    4. Heading4
+    5. Heading5
+    6. Heading6
+    7. Bold_Text -> Undergoes parsing to check if contains any Links or Italic_Text
+    8. Italic_Text -> Undergoes parsing to check if contains any Links
+    9. Plain_Text -> Undergoes parsing to check if contains any Links
+
+    ### TODO
+    - Lists
+    - Tables
+    - Links
+    - Images
+    - Bold text
+    - Italic Text
+    """
     def __init__(self, feed):
         self.feed = feed
         self.tokens = []
