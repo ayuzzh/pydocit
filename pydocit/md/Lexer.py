@@ -95,7 +95,7 @@ class PlainText(Token):
 
 
 class BoldText(Token):
-    re_pattern = re.compile(r"\*\*.+\*\*", re.MULTILINE)
+    re_pattern = re.compile(r"(\*\*.+\*\*)", re.MULTILINE)
 
     def __init__(self, value, start, end):
         self.name = "BoldText"
@@ -107,7 +107,7 @@ class BoldText(Token):
 
 
 class ItalicText(Token):
-    re_pattern = re.compile(r"\*.+\*")
+    re_pattern = re.compile(r"(?!\*)(\*.+\*)(?!\*)")
 
     def __init__(self, value, start, end):
         self.name = "ItalicText"
