@@ -5,9 +5,11 @@ class Token:
     def __init__(self, name: str, value: str, start: int, end: int):
         self.name = name
         self.val = value
+        self.start = start
+        self.end = end
 
     def __repr__(self):
-        return f"{self.name}:{self.val}"
+        return f"{self.name}(\"{self.val}\", {self.start}, {self.end})"
 
 
 class Heading1(Token):
