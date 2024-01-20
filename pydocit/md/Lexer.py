@@ -95,7 +95,7 @@ class PlainText(Token):
 
 
 class BoldText(Token):
-    re_pattern = re.compile(r"(\*\*.+\*\*)", re.MULTILINE)
+    re_pattern = re.compile(r"\*\*(.+?)\*\*", re.DOTALL | re.MULTILINE)
 
     def __init__(self, value, start, end):
         self.name = "BoldText"
@@ -156,6 +156,7 @@ class MDParser:
         self.tokenize_h4()
         self.tokenize_h5()
         self.tokenize_h6()
+        self.tokenize_bold_text()
 
         return self.tokens
 
@@ -200,6 +201,17 @@ class MDParser:
             self.add_tok(tok)
 
             self.ignore.append((match.start(), match.end()))
+
+    def tokenize_bold_text(self):
+        for match in BoldText.re_pattern.finditer(self.feed):
+            if not self.check_if_in_ignore(match.start(), match.end()):
+                self.add_tok(BoldText(match.group(1), match.start(), match.end()))
+
+    def check_if_in_ignore(self, start, end):
+        for s, e in self.ignore:
+            if start > s and end < end:
+                return True
+        return False
 
     def add_tok(self, tok):
         for index, value in enumerate(self.tokens):
