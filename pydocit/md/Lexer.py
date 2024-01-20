@@ -9,7 +9,7 @@ class Token:
         self.end = end
 
     def __repr__(self):
-        return f"{self.name}(\"{self.val}\", {self.start}, {self.end})"
+        return f'{self.name}("{self.val}", {self.start}, {self.end})'
 
 
 class Heading1(Token):
@@ -118,7 +118,7 @@ class ItalicText(Token):
         super().__init__(self.name, self.val, self.start, self.end)
 
 
-class Lexer:
+class MDParser:
     """
     This class parses the md markup text and converts in into
     a simple tree which can be used to converted into html or pdf
@@ -143,6 +143,7 @@ class Lexer:
     - Bold text
     - Italic Text
     """
+
     def __init__(self, feed):
         self.feed = feed
         self.tokens = []

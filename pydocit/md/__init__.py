@@ -1,1 +1,1 @@
-from .Lexer import Lexer
+from .Lexer import MDParser
