@@ -11,6 +11,9 @@ class Token:
     def __repr__(self):
         return f'{self.name}("{self.val}", {self.start}, {self.end})'
 
+    def __str__(self):
+        return f"{self.name}"
+
 
 class Heading1(Token):
     re_pattern = re.compile(r"^(?:#)(?: )+(.+)", re.MULTILINE)
@@ -205,17 +208,19 @@ class MDParser:
 
     def tokenize_bold_text(self):
         for match in BoldText.re_pattern.finditer(self.feed):
-            if not self.check_if_in_ignore(match.start(), match.end()):
+            if not self.check_if_in_ignore(BoldText, match.start(), match.end()):
                 self.add_tok(BoldText(match.group(1), match.start(), match.end()))
 
     def tokenize_italic_text(self):
         for match in ItalicText.re_pattern.finditer(self.feed):
-            if not self.check_if_in_ignore(match.start(), match.end()):
+            if not self.check_if_in_ignore(ItalicText, match.start(), match.end()):
                 self.add_tok(ItalicText(match.group(1), match.start(), match.end()))
 
-    def check_if_in_ignore(self, start, end):
+    def check_if_in_ignore(self, tok_type, start, end):
         for s, e in self.ignore:
             if start > s and end < end:
+                if tok_type in ["BoldText", "ItalicText"]:
+                    return False
                 return True
         return False
 
