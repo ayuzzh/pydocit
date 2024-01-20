@@ -118,3 +118,9 @@ def function_with_annotations_derived_from_typing(a: List[int], b: Optional[str]
     """This is docstring of function_with_child_function function
     with annotations derived from typing."""
     pass
+
+
+def functions_with_return_annotations() -> str:
+    """This is docstring of functions_with_return_annotations function
+    with return annotations."""
+    pass

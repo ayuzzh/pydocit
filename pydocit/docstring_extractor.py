@@ -31,8 +31,13 @@ class Visitor(ast.NodeVisitor):
         self.current_class = None
 
     def visit_FunctionDef(self, node):
+        returns = None
+        if node.returns is not None:
+            returns = astunparse.unparse(node.returns)
+
         args = {}
         list_of_args = []
+
         for i in node.args.args:
             _source = astunparse.unparse(i)
 
@@ -64,11 +69,13 @@ class Visitor(ast.NodeVisitor):
                 self.classes[self.current_class]["methods"][node.name] = {
                     "args": args,
                     "docstring": ast.get_docstring(node),
+                    "returns": returns,
                 }
             else:
                 self.functions[node.name] = {
                     "args": args,
                     "docstring": ast.get_docstring(node),
+                    "returns": returns,
                 }
 
         # For wrapping up the function
