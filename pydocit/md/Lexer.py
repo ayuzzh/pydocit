@@ -107,7 +107,7 @@ class BoldText(Token):
 
 
 class ItalicText(Token):
-    re_pattern = re.compile(r"(?!\*)(\*.+\*)(?!\*)")
+    re_pattern = re.compile(r"(?<!\*)(\*.+\*)")
 
     def __init__(self, value, start, end):
         self.name = "ItalicText"
@@ -157,6 +157,7 @@ class MDParser:
         self.tokenize_h5()
         self.tokenize_h6()
         self.tokenize_bold_text()
+        self.tokenize_italic_text()
 
         return self.tokens
 
@@ -206,6 +207,11 @@ class MDParser:
         for match in BoldText.re_pattern.finditer(self.feed):
             if not self.check_if_in_ignore(match.start(), match.end()):
                 self.add_tok(BoldText(match.group(1), match.start(), match.end()))
+
+    def tokenize_italic_text(self):
+        for match in ItalicText.re_pattern.finditer(self.feed):
+            if not self.check_if_in_ignore(match.start(), match.end()):
+                self.add_tok(ItalicText(match.group(1), match.start(), match.end()))
 
     def check_if_in_ignore(self, start, end):
         for s, e in self.ignore:
