@@ -121,7 +121,7 @@ class ItalicText(Token):
         super().__init__(self.name, self.val, self.start, self.end)
 
 
-class MDParser:
+class Lexer:
     """
     This class parses the md markup text and converts in into
     a simple tree which can be used to converted into html or pdf
