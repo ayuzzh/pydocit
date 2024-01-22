@@ -150,7 +150,7 @@ class MultilineCode(Token):
 
 
 class SingleLineCode(Token):
-    re_pattern = re.compile(r"`(.+?)`")
+    re_pattern = re.compile(r"(?<!`)`(?!`)(.+?)(?<!`)`(?!`)")
 
     def __init__(self, value, start, end):
         self.name = "SinglelineCode"
