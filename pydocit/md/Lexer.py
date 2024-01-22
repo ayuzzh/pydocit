@@ -134,11 +134,11 @@ class Link(Token):
         super().__init__(self.name, self.val, self.start, self.end)
 
     def __repr__(self):
-        return f"return f'{self.name} (\"{self.val}\", \"{self.link}\", {self.start}, {self.end})'"
+        return f'{self.name}("{self.val}", "{self.link}", {self.start}, {self.end})'
 
 
 class MultilineCode(Token):
-    re_pattern = re.compile(r"^```(.+?)```", re.DOTALL | re.MULTILINE)
+    re_pattern = re.compile(r"^`{3}(.+?)`{3}", re.DOTALL | re.MULTILINE)
 
     def __init__(self, value, start, end):
         self.name = "MultilineCode"
@@ -153,7 +153,7 @@ class SingleLineCode(Token):
     re_pattern = re.compile(r"`(.+?)`")
 
     def __init__(self, value, start, end):
-        self.name = "MultilineCode"
+        self.name = "SinglelineCode"
         self.val = value
         self.start = start
         self.end = end
@@ -202,7 +202,7 @@ class Lexer:
         self.tokenize_bold_text()
         self.tokenize_italic_text()
         self.tokenize_links()
-        self.tokenize()
+        self.tokenize_singleline_code()
 
         return self.tokens
 
