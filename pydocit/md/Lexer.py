@@ -121,6 +121,22 @@ class ItalicText(Token):
         super().__init__(self.name, self.val, self.start, self.end)
 
 
+class Link(Token):
+    re_pattern = re.compile(r"\[(?P<text>.+?)\]\((?P<link>.+?)\)")
+
+    def __init__(self, text, link, start, end):
+        self.name = "Link"
+        self.val = text
+        self.link = link
+        self.start = start
+        self.end = end
+
+        super().__init__(self.name, self.val, self.start, self.end)
+
+    def __repr__(self):
+        return f"return f'{self.name} (\"{self.val}\", \"{self.link}\", {self.start}, {self.end})'"
+
+
 class Lexer:
     """
     This class parses the md markup text and converts in into
@@ -161,6 +177,7 @@ class Lexer:
         self.tokenize_h6()
         self.tokenize_bold_text()
         self.tokenize_italic_text()
+        self.tokenize_links()
 
         return self.tokens
 
@@ -215,6 +232,11 @@ class Lexer:
         for match in ItalicText.re_pattern.finditer(self.feed):
             if not self.check_if_in_ignore(ItalicText, match.start(), match.end()):
                 self.add_tok(ItalicText(match.group(1), match.start(), match.end()))
+
+    def tokenize_links(self):
+        for match in Link.re_pattern.finditer(self.feed):
+            if not self.check_if_in_ignore(Link, match.start(), match.end()):
+                self.add_tok(Link(match.group(1), match.group(2), match.start(), match.end()))
 
     def check_if_in_ignore(self, tok_type, start, end):
         for s, e in self.ignore:
