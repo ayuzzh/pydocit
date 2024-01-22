@@ -169,16 +169,17 @@ class Lexer:
 
     The parsing occurs in order
     1. Multiline_Code
-    2. Heading1
-    3. Heading2
-    4. Heading3
-    5. Heading4
-    6. Heading5
-    7. Heading6
-    8. Bold_Text -> Undergoes parsing to check if contains any Links or Italic_Text
-    9. Italic_Text -> Undergoes parsing to check if contains any Links
-    10. Link
-    11. Plain_Text -> Undergoes parsing to check if contains any Links
+    2. Singleline_Code
+    3. Heading1
+    4. Heading2
+    5. Heading3
+    6. Heading4
+    7. Heading5
+    8. Heading6
+    9. Bold_Text -> Undergoes parsing to check if contains any Links or Italic_Text
+    10. Italic_Text -> Undergoes parsing to check if contains any Links
+    11. Link
+    12. Plain_Text -> Undergoes parsing to check if contains any Links
 
     ### TODO
     - Lists
@@ -193,6 +194,7 @@ class Lexer:
 
     def tokenize(self):
         self.tokenize_multiline_code()
+        self.tokenize_singleline_code()
         self.tokenize_h1()
         self.tokenize_h2()
         self.tokenize_h3()
@@ -202,7 +204,6 @@ class Lexer:
         self.tokenize_bold_text()
         self.tokenize_italic_text()
         self.tokenize_links()
-        self.tokenize_singleline_code()
 
         return self.tokens
 
