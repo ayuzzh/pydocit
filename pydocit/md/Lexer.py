@@ -152,15 +152,13 @@ class Lexer:
     6. Heading6
     7. Bold_Text -> Undergoes parsing to check if contains any Links or Italic_Text
     8. Italic_Text -> Undergoes parsing to check if contains any Links
-    9. Plain_Text -> Undergoes parsing to check if contains any Links
+    9. Link
+    10. Plain_Text -> Undergoes parsing to check if contains any Links
 
     ### TODO
     - Lists
     - Tables
-    - Links
     - Images
-    - Bold text
-    - Italic Text
     """
 
     def __init__(self, feed):
