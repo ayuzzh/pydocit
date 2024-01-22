@@ -3,5 +3,5 @@ Your go-to utility✨ for effortlessly extracting docstrings from Python project
 converting them into stylish **HTML** and **PDF** documents. Embrace the clean and professional look with
 ``md`` formatting embedded in docstrings! 
 
-*Work is still going on on [development](https://github.com/ayuzzh/pydocit/tree/development) branch.
+*Work is still going on [development](https://github.com/ayuzzh/pydocit/tree/development) branch.
 This package is still in development.*
