@@ -149,6 +149,18 @@ class MultilineCode(Token):
         super().__init__(self.name, self.val, self.start, self.end)
 
 
+class SingleLineCode(Token):
+    re_pattern = re.compile(r"`(.+?)`")
+
+    def __init__(self, value, start, end):
+        self.name = "MultilineCode"
+        self.val = value
+        self.start = start
+        self.end = end
+
+        super().__init__(self.name, self.val, self.start, self.end)
+
+
 class Lexer:
     """
     This class parses the md markup text and converts in into
@@ -190,6 +202,7 @@ class Lexer:
         self.tokenize_bold_text()
         self.tokenize_italic_text()
         self.tokenize_links()
+        self.tokenize()
 
         return self.tokens
 
@@ -256,6 +269,11 @@ class Lexer:
         for match in Link.re_pattern.finditer(self.feed):
             if not self.check_if_in_ignore(Link, match.start(), match.end()):
                 self.add_tok(Link(match.group(1), match.group(2), match.start(), match.end()))
+
+    def tokenize_singleline_code(self):
+        for match in SingleLineCode.re_pattern.finditer(self.feed):
+            if not self.check_if_in_ignore(SingleLineCode, match.start(), match.end()):
+                self.add_tok(SingleLineCode(match.group(1), match.start(), match.end()))
 
     def check_if_in_ignore(self, tok_type, start, end):
         for s, e in self.ignore:
