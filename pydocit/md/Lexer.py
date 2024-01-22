@@ -137,6 +137,18 @@ class Link(Token):
         return f"return f'{self.name} (\"{self.val}\", \"{self.link}\", {self.start}, {self.end})'"
 
 
+class MultilineCode(Token):
+    re_pattern = re.compile(r"^```(.+?)```", re.DOTALL | re.MULTILINE)
+
+    def __init__(self, value, start, end):
+        self.name = "MultilineCode"
+        self.val = value
+        self.start = start
+        self.end = end
+
+        super().__init__(self.name, self.val, self.start, self.end)
+
+
 class Lexer:
     """
     This class parses the md markup text and converts in into
@@ -144,16 +156,17 @@ class Lexer:
     according to the requirement.
 
     The parsing occurs in order
-    1. Heading1
-    2. Heading2
-    3. Heading3
-    4. Heading4
-    5. Heading5
-    6. Heading6
-    7. Bold_Text -> Undergoes parsing to check if contains any Links or Italic_Text
-    8. Italic_Text -> Undergoes parsing to check if contains any Links
-    9. Link
-    10. Plain_Text -> Undergoes parsing to check if contains any Links
+    1. Multiline_Code
+    2. Heading1
+    3. Heading2
+    4. Heading3
+    5. Heading4
+    6. Heading5
+    7. Heading6
+    8. Bold_Text -> Undergoes parsing to check if contains any Links or Italic_Text
+    9. Italic_Text -> Undergoes parsing to check if contains any Links
+    10. Link
+    11. Plain_Text -> Undergoes parsing to check if contains any Links
 
     ### TODO
     - Lists
@@ -167,6 +180,7 @@ class Lexer:
         self.ignore = []
 
     def tokenize(self):
+        self.tokenize_multiline_code()
         self.tokenize_h1()
         self.tokenize_h2()
         self.tokenize_h3()
@@ -178,6 +192,13 @@ class Lexer:
         self.tokenize_links()
 
         return self.tokens
+
+    def tokenize_multiline_code(self):
+        for match in MultilineCode.re_pattern.finditer(self.feed):
+            tok = MultilineCode(match.group(1), match.start(), match.end())
+            self.add_tok(tok)
+
+            self.ignore.append((match.start(), match.end()))
 
     def tokenize_h1(self):
         for match in Heading1.re_pattern.finditer(self.feed):
