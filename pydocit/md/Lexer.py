@@ -269,7 +269,14 @@ class Lexer:
     def tokenize_links(self):
         for match in Link.re_pattern.finditer(self.feed):
             if not self.check_if_in_ignore(Link, match.start(), match.end()):
-                self.add_tok(Link(match.group(1), match.group(2), match.start(), match.end()))
+                self.add_tok(
+                    Link(
+                        match.group(1),
+                        match.group(2),
+                        match.start(),
+                        match.end(),
+                    )
+                )
 
     def tokenize_singleline_code(self):
         for match in SingleLineCode.re_pattern.finditer(self.feed):
