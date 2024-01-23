@@ -200,14 +200,15 @@ class Lexer:
     6. Heading4
     7. Heading5
     8. Heading6
-    9. Bold_Text -> Undergoes parsing to check if contains any Links or Italic_Text
-    10. Italic_Text -> Undergoes parsing to check if contains any Links
-    11. Link
-    12. Plain_Text -> Undergoes parsing to check if contains any Links
+    9. Table header
+    10. Table Row
+    11. Bold_Text -> Undergoes parsing to check if contains any Links or Italic_Text
+    12. Italic_Text -> Undergoes parsing to check if contains any Links
+    13. Link
+    14. Plain_Text -> Undergoes parsing to check if contains any Links
 
     ### TODO
     - Lists
-    - Tables
     - Images
     """
 
