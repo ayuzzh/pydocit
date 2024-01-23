@@ -220,18 +220,24 @@ class Lexer:
         self.table_header_start_index = []
 
     def tokenize(self):
+        # tokenize_singleline_code is tokenized before headings
+        # so that singleline code can be included in headings
         self.tokenize_multiline_code()
         self.tokenize_singleline_code()
+
         self.tokenize_h1()
         self.tokenize_h2()
         self.tokenize_h3()
         self.tokenize_h4()
         self.tokenize_h5()
         self.tokenize_h6()
+
         self.tokenize_table_header()
         self.tokenize_table_row()
+
         self.tokenize_bold_text()
         self.tokenize_italic_text()
+
         self.tokenize_links()
 
         return self.tokens
