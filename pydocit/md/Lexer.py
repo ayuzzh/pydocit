@@ -285,7 +285,7 @@ class Lexer:
 
     def check_if_in_ignore(self, tok_type, start, end):
         for s, e in self.ignore:
-            if start > s and end < end:
+            if start > s and e > end:
                 if tok_type in ["BoldText", "ItalicText"]:
                     return False
                 return True
