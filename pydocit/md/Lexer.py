@@ -16,7 +16,7 @@ class Token:
 
 
 class Heading1(Token):
-    re_pattern = re.compile(r"^(?:#)(?: )+(.+)", re.MULTILINE)
+    re_pattern = re.compile(r"^# +(.+)", re.MULTILINE)
 
     def __init__(self, value, start, end):
         self.name = "Heading1"
@@ -28,7 +28,7 @@ class Heading1(Token):
 
 
 class Heading2(Token):
-    re_pattern = re.compile(r"^(?:#){2}(?: )+(.+)", re.MULTILINE)
+    re_pattern = re.compile(r"^#{2} +(.+)", re.MULTILINE)
 
     def __init__(self, value, start, end):
         self.name = "Heading2"
@@ -40,7 +40,7 @@ class Heading2(Token):
 
 
 class Heading3(Token):
-    re_pattern = re.compile(r"^(?:#){3}(?: )+(.+)", re.MULTILINE)
+    re_pattern = re.compile(r"^#{3} +(.+)", re.MULTILINE)
 
     def __init__(self, value, start, end):
         self.name = "Heading3"
@@ -52,7 +52,7 @@ class Heading3(Token):
 
 
 class Heading4(Token):
-    re_pattern = re.compile(r"^(?:#){4}(?: )+(.+)", re.MULTILINE)
+    re_pattern = re.compile(r"^#{4} +(.+)", re.MULTILINE)
 
     def __init__(self, value, start, end):
         self.name = "Heading4"
@@ -64,7 +64,7 @@ class Heading4(Token):
 
 
 class Heading5(Token):
-    re_pattern = re.compile(r"^(?:#){5}(?: )+(.+)", re.MULTILINE)
+    re_pattern = re.compile(r"^#{5} +(.+)", re.MULTILINE)
 
     def __init__(self, value, start, end):
         self.name = "Heading5"
@@ -76,7 +76,7 @@ class Heading5(Token):
 
 
 class Heading6(Token):
-    re_pattern = re.compile(r"^(?:#){6}(?: )+(.+)", re.MULTILINE)
+    re_pattern = re.compile(r"^#{6} +(.+)", re.MULTILINE)
 
     def __init__(self, value, start, end):
         self.name = "Heading6"
@@ -122,7 +122,7 @@ class ItalicText(Token):
 
 
 class Link(Token):
-    re_pattern = re.compile(r"\[(?P<text>.+?)\]\((?P<link>.+?)\)")
+    re_pattern = re.compile(r"\[(?P<text>.+?)]\((?P<link>.+?)\)")
 
     def __init__(self, text, link, start, end):
         self.name = "Link"
