@@ -161,6 +161,30 @@ class SingleLineCode(Token):
         super().__init__(self.name, self.val, self.start, self.end)
 
 
+class TableHeader(Token):
+    re_pattern = re.compile(r"^\| +(.+) +\| *\n-{3,}", re.MULTILINE)
+
+    def __init__(self, value, start, end):
+        self.name = "TableHeader"
+        self.val = value
+        self.start = start
+        self.end = end
+
+        super().__init__(self.name, self.val, self.start, self.end)
+
+
+class TableRow(Token):
+    re_pattern = re.compile(r"^\| +(.+) +\| *", re.MULTILINE)
+
+    def __init__(self, value, start, end):
+        self.name = "TableRow"
+        self.val = value
+        self.start = start
+        self.end = end
+
+        super().__init__(self.name, self.val, self.start, self.end)
+
+
 class Lexer:
     """
     This class parses the md markup text and converts in into
@@ -192,6 +216,8 @@ class Lexer:
         self.tokens = []
         self.ignore = []
 
+        self.table_header_start_index = []
+
     def tokenize(self):
         self.tokenize_multiline_code()
         self.tokenize_singleline_code()
@@ -201,6 +227,8 @@ class Lexer:
         self.tokenize_h4()
         self.tokenize_h5()
         self.tokenize_h6()
+        self.tokenize_table_header()
+        self.tokenize_table_row()
         self.tokenize_bold_text()
         self.tokenize_italic_text()
         self.tokenize_links()
@@ -282,6 +310,18 @@ class Lexer:
         for match in SingleLineCode.re_pattern.finditer(self.feed):
             if not self.check_if_in_ignore(SingleLineCode, match.start(), match.end()):
                 self.add_tok(SingleLineCode(match.group(1), match.start(), match.end()))
+
+    def tokenize_table_header(self):
+        for match in TableHeader.re_pattern.finditer(self.feed):
+            if not self.check_if_in_ignore(TableHeader, match.start(), match.end()):
+                self.add_tok(TableHeader(match.group(1), match.start(), match.end()))
+                self.table_header_start_index.append(match.start())
+
+    def tokenize_table_row(self):
+        for match in TableRow.re_pattern.finditer(self.feed):
+            if not self.check_if_in_ignore(TableRow, match.start(), match.end()):
+                if not match.start() in self.table_header_start_index:
+                    self.add_tok(TableRow(match.group(1), match.start(), match.end()))
 
     def check_if_in_ignore(self, tok_type, start, end):
         for s, e in self.ignore:
