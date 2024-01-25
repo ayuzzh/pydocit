@@ -208,12 +208,15 @@ class Lexer:
     14. Plain_Text -> Undergoes parsing to check if contains any Links
 
     ### TODO
-    - Lists
     - Images
     """
 
     def __init__(self, feed):
-        self.feed = feed
+        self.original_feed = feed
+
+        # It may be altered for preventing matching clashes
+        self.feed = self.original_feed
+
         self.tokens = []
         self.ignore = []
 
@@ -337,6 +340,11 @@ class Lexer:
                     return False
                 return True
         return False
+
+    def alter_feed(self, index, val):
+        feed_list = list(self.feed)
+        feed_list[index] = val
+        self.feed = "".join(feed_list)
 
     def add_tok(self, tok):
         for index, value in enumerate(self.tokens):
