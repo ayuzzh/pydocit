@@ -230,6 +230,28 @@ class Image(Token):
         return f'{self.name}("{self.alt}", "{self.link}", {self.text}, {self.start}, {self.end})'
 
 
+class ImageLink:
+    re_pattern = re.compile(
+        r"\[!\[(?P<alt>.+?)]\((?P<image_link>.+?)[\t ]+(?P<text>.+?)\)]\((?P<link>.+?)\)"
+    )
+
+    def __init__(self, alt, image_link, text, link, start, end):
+        self.name = "ImageLink"
+
+        self.alt = alt
+        self.image_link = image_link
+        self.link = link
+        self.text = text
+
+        self.start = start
+        self.end = end
+
+        super().__init__(self.name, self.link, self.start, self.end)
+
+    def __repr__(self):
+        return f'{self.name}("{self.alt}", "{self.image_link}", "{self.link}", {self.text}, {self.start}, {self.end})'
+
+
 class Lexer:
     """
     This class parses the md markup text and converts in into
@@ -249,8 +271,10 @@ class Lexer:
     10. Table Row
     11. Bold_Text -> Undergoes parsing to check if contains any Links or Italic_Text
     12. Italic_Text -> Undergoes parsing to check if contains any Links
-    13. Link
-    14. Plain_Text -> Undergoes parsing to check if contains any Links
+    13. Image
+    14. Link
+    15. Image_Links
+    16. Plain_Text -> Undergoes parsing to check if contains any Links
 
     ### TODO
     - Images
@@ -291,6 +315,7 @@ class Lexer:
 
         self.tokenize_images()
         self.tokenize_links()
+        self.tokenize_image_links()
 
         return self.tokens
 
@@ -407,6 +432,20 @@ class Lexer:
                 self.add_tok(
                     Image(
                         match.group("alt"),
+                        match.group("link"),
+                        match.group("text"),
+                        match.start(),
+                        match.end(),
+                    )
+                )
+
+    def tokenize_image_links(self):
+        for match in Image.re_pattern.finditer(self.feed):
+            if not self.check_if_in_ignore(ImageLink, match.start(), match.end()):
+                self.add_tok(
+                    ImageLink(
+                        match.group("alt"),
+                        match.group("image_link"),
                         match.group("link"),
                         match.group("text"),
                         match.start(),
