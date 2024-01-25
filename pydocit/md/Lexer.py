@@ -210,7 +210,9 @@ class OrderedListItem(Token):
 
 
 class Image(Token):
-    re_pattern = re.compile(r"!\[(?P<alt>.+?)]\((?P<link>\S+)[\t ]+(?P<text>.+?)\)", re.MULTILINE)
+    re_pattern = re.compile(
+        r"!\[(?P<alt>.+?)]\((?P<link>\S+)[\t ]+(?P<text>.+?)\)", re.MULTILINE
+    )
 
     def __init__(self, alt, link, text, start, end):
         self.name = "Image"
@@ -382,8 +384,12 @@ class Lexer:
 
     def tokenize_unordered_list(self):
         for match in UnorderedListItem.re_pattern.finditer(self.feed):
-            if not self.check_if_in_ignore(UnorderedListItem, match.start(), match.end()):
-                self.add_tok(UnorderedListItem(match.group(1), match.start(), match.end()))
+            if not self.check_if_in_ignore(
+                UnorderedListItem, match.start(), match.end()
+            ):
+                self.add_tok(
+                    UnorderedListItem(match.group(1), match.start(), match.end())
+                )
                 # For preventing the clash between italic matching
                 # and unordered list matching
                 self.alter_feed(match.start(), "-")
@@ -391,7 +397,9 @@ class Lexer:
     def tokenize_ordered_list(self):
         for match in OrderedListItem.re_pattern.finditer(self.feed):
             if not self.check_if_in_ignore(OrderedListItem, match.start(), match.end()):
-                self.add_tok(OrderedListItem(match.group(1), match.start(), match.end()))
+                self.add_tok(
+                    OrderedListItem(match.group(1), match.start(), match.end())
+                )
 
     def tokenize_images(self):
         for match in Image.re_pattern.finditer(self.feed):

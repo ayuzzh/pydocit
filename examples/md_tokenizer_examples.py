@@ -26,4 +26,3 @@ lexer = Lexer(md)
 
 for i in lexer.tokenize():
     print(repr(i))
-
