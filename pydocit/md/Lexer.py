@@ -185,6 +185,30 @@ class TableRow(Token):
         super().__init__(self.name, self.val, self.start, self.end)
 
 
+class UnorderedListItem(Token):
+    re_pattern = re.compile(r"^[\t ]*\*[\t ]+(.+)", re.MULTILINE)
+
+    def __init__(self, value, start, end):
+        self.name = "UnorderedListItem"
+        self.val = value
+        self.start = start
+        self.end = end
+
+        super().__init__(self.name, self.val, self.start, self.end)
+
+
+class OrderedListItem(Token):
+    re_pattern = re.compile(r"^[\t ]*\d+\.[\t ]+(.+)", re.MULTILINE)
+
+    def __init__(self, value, start, end):
+        self.name = "OrderedListItem"
+        self.val = value
+        self.start = start
+        self.end = end
+
+        super().__init__(self.name, self.val, self.start, self.end)
+
+
 class Lexer:
     """
     This class parses the md markup text and converts in into
@@ -237,6 +261,9 @@ class Lexer:
 
         self.tokenize_table_header()
         self.tokenize_table_row()
+
+        self.tokenize_unordered_list()
+        self.tokenize_ordered_list()
 
         self.tokenize_bold_text()
         self.tokenize_italic_text()
@@ -332,6 +359,19 @@ class Lexer:
             if not self.check_if_in_ignore(TableRow, match.start(), match.end()):
                 if not match.start() in self.table_header_start_index:
                     self.add_tok(TableRow(match.group(1), match.start(), match.end()))
+
+    def tokenize_unordered_list(self):
+        for match in UnorderedListItem.re_pattern.finditer(self.feed):
+            if not self.check_if_in_ignore(UnorderedListItem, match.start(), match.end()):
+                self.add_tok(UnorderedListItem(match.group(1), match.start(), match.end()))
+                # For preventing the clash between italic matching
+                # and unordered list matching
+                self.alter_feed(match.start(), "-")
+
+    def tokenize_ordered_list(self):
+        for match in OrderedListItem.re_pattern.finditer(self.feed):
+            if not self.check_if_in_ignore(OrderedListItem, match.start(), match.end()):
+                self.add_tok(OrderedListItem(match.group(1), match.start(), match.end()))
 
     def check_if_in_ignore(self, tok_type, start, end):
         for s, e in self.ignore:
