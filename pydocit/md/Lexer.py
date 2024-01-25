@@ -122,7 +122,7 @@ class ItalicText(Token):
 
 
 class Link(Token):
-    re_pattern = re.compile(r"(?<!!)\[(?P<text>.+?)]\((?P<link>.+?)\)")
+    re_pattern = re.compile(r"(?<!!)\[(?P<text>.+?)]\((?P<link>\S+)\)")
 
     def __init__(self, text, link, start, end):
         self.name = "Link"
@@ -210,7 +210,7 @@ class OrderedListItem(Token):
 
 
 class Image(Token):
-    re_pattern = re.compile(r"!\[(?P<alt>.+?)]\((?P<link>.+?)[\t ]+(?P<text>.+?)\)", re.MULTILINE)
+    re_pattern = re.compile(r"!\[(?P<alt>.+?)]\((?P<link>\S+)[\t ]+(?P<text>.+?)\)", re.MULTILINE)
 
     def __init__(self, alt, link, text, start, end):
         self.name = "Image"
