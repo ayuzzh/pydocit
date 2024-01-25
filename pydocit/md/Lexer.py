@@ -122,7 +122,7 @@ class ItalicText(Token):
 
 
 class Link(Token):
-    re_pattern = re.compile(r"(?<!!)\[(?P<text>.+?)]\((?P<link>\S+)\)")
+    re_pattern = re.compile(r"(?<!!)\[(?<!!)(?P<text>.+?)]\((?P<link>\S+)\)")
 
     def __init__(self, text, link, start, end):
         self.name = "Link"
