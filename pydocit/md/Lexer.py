@@ -222,7 +222,7 @@ class Image(Token):
         self.start = start
         self.end = end
 
-        super().__init__(self.name, self.val, self.start, self.end)
+        super().__init__(self.name, self.link, self.start, self.end)
 
     def __repr__(self):
         return f'{self.name}("{self.alt}", "{self.link}", {self.text}, {self.start}, {self.end})'
