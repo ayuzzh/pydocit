@@ -209,6 +209,25 @@ class OrderedListItem(Token):
         super().__init__(self.name, self.val, self.start, self.end)
 
 
+class Image(Token):
+    re_pattern = re.compile(r"!\[(?P<alt>.+?)]\((?P<link>.+?)[\t ]+(?P<text>.+?)\)", re.MULTILINE)
+
+    def __init__(self, alt, link, text, start, end):
+        self.name = "Image"
+
+        self.alt = alt
+        self.link = link
+        self.text = text
+
+        self.start = start
+        self.end = end
+
+        super().__init__(self.name, self.val, self.start, self.end)
+
+    def __repr__(self):
+        return f'{self.name}("{self.alt}", "{self.link}", {self.text}, {self.start}, {self.end})'
+
+
 class Lexer:
     """
     This class parses the md markup text and converts in into
@@ -268,6 +287,7 @@ class Lexer:
         self.tokenize_bold_text()
         self.tokenize_italic_text()
 
+        self.tokenize_images()
         self.tokenize_links()
 
         return self.tokens
@@ -372,6 +392,19 @@ class Lexer:
         for match in OrderedListItem.re_pattern.finditer(self.feed):
             if not self.check_if_in_ignore(OrderedListItem, match.start(), match.end()):
                 self.add_tok(OrderedListItem(match.group(1), match.start(), match.end()))
+
+    def tokenize_images(self):
+        for match in Image.re_pattern.finditer(self.feed):
+            if not self.check_if_in_ignore(Image, match.start(), match.end()):
+                self.add_tok(
+                    Image(
+                        match.group("alt"),
+                        match.group("link"),
+                        match.group("text"),
+                        match.start(),
+                        match.end(),
+                    )
+                )
 
     def check_if_in_ignore(self, tok_type, start, end):
         for s, e in self.ignore:
