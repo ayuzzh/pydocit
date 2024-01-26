@@ -254,11 +254,9 @@ class ImageLink:
 
 class Lexer:
     """
-    This class parses the md markup text and converts in into
-    a simple tree which can be used to converted into html or pdf
-    according to the requirement.
+    Convert MD content into tokens
 
-    The parsing occurs in order
+    The tokenizing occurs in order
     1. Multiline_Code
     2. Singleline_Code
     3. Heading1
@@ -269,15 +267,12 @@ class Lexer:
     8. Heading6
     9. Table header
     10. Table Row
-    11. Bold_Text -> Undergoes parsing to check if contains any Links or Italic_Text
-    12. Italic_Text -> Undergoes parsing to check if contains any Links
+    11. Bold_Text
+    12. Italic_Text
     13. Image
     14. Link
     15. Image_Links
-    16. Plain_Text -> Undergoes parsing to check if contains any Links
-
-    ### TODO
-    - Images
+    16. Plain_Text
     """
 
     def __init__(self, feed):
