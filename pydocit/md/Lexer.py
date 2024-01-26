@@ -252,6 +252,20 @@ class ImageLink:
         return f'{self.name}("{self.alt}", "{self.image_link}", "{self.link}", {self.text}, {self.start}, {self.end})'
 
 
+class NewLine(Token):
+    re_pattern = re.compile(r"\n", re.MULTILINE)
+
+    def __init__(self, pos):
+        self.name = "NewLine"
+        self.start = pos
+        self.end = pos
+
+        super().__init__(self.name, None, self.start, self.end)
+
+    def __repr__(self):
+        return f'{self.name}({self.start})'
+
+
 class Lexer:
     """
     Convert MD content into tokens
@@ -311,6 +325,8 @@ class Lexer:
         self.tokenize_images()
         self.tokenize_links()
         self.tokenize_image_links()
+
+        self.tokenize_newline()
 
         return self.tokens
 
@@ -447,6 +463,10 @@ class Lexer:
                         match.end(),
                     )
                 )
+
+    def tokenize_newline(self):
+        for match in NewLine.re_pattern.finditer(self.feed):
+            self.add_tok(NewLine(match.start()))
 
     def check_if_in_ignore(self, tok_type, start, end):
         for s, e in self.ignore:
