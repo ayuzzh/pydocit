@@ -260,7 +260,7 @@ class NewLine(Token):
         self.start = pos
         self.end = pos
 
-        super().__init__(self.name, None, self.start, self.end)
+        super().__init__(self.name, "\n", self.start, self.end)
 
     def __repr__(self):
         return f'{self.name}({self.start})'
