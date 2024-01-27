@@ -88,7 +88,7 @@ class Heading6(Token):
 
 
 class PlainText(Token):
-    re_pattern = re.compile(r"^(.+)", re.MULTILINE)
+    re_pattern = re.compile(r"^(?!(- )|(\d+\. ))(.+)", re.MULTILINE)
 
     def __init__(self, value, start, end):
         self.name = "PlainText"
