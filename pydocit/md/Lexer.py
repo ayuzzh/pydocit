@@ -265,7 +265,7 @@ class NewLine(Token):
         super().__init__(self.name, "\n", self.start, self.end)
 
     def __repr__(self):
-        return f'{self.name}({self.start})'
+        return f"{self.name}({self.start})"
 
 
 class Lexer:
@@ -481,7 +481,9 @@ class Lexer:
             if match.start() not in ignore:
                 if not self.check_if_in_mlc_ignore(match.start(), match.end()):
                     if not re.match(r"^-{3,}$", match.group()):
-                        self.add_tok(PlainText(match.group(1), match.start(), match.end()))
+                        self.add_tok(
+                            PlainText(match.group(1), match.start(), match.end())
+                        )
 
     def check_if_in_ignore(self, tok_type, start, end):
         for s, e in self.ignore:
@@ -492,7 +494,7 @@ class Lexer:
         return False
 
     def check_if_in_mlc_ignore(self, start, end):
-        for (s, e) in self.multiline_code:
+        for s, e in self.multiline_code:
             if s == start:
                 return True
             elif e == end:
