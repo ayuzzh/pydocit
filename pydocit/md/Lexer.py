@@ -330,6 +330,8 @@ class Lexer:
 
         self.tokenize_newline()
 
+        self.tokenize_text()
+
         return self.tokens
 
     def tokenize_multiline_code(self):
@@ -471,6 +473,38 @@ class Lexer:
     def tokenize_newline(self):
         for match in NewLine.re_pattern.finditer(self.feed):
             self.add_tok(NewLine(match.start()))
+
+    def tokenize_text(self):
+        ignore_indexes = []
+
+        # Make a list of parts to ignore
+        # from including in plain text
+        for (k, l) in self.ignore:
+            ignore_indexes.extend(range(k, l))
+        for (k, l) in self.rows:
+            ignore_indexes.extend(range(k, l))
+        for k, l in zip(self.table_header_start_index, self.table_header_end_index):
+            ignore_indexes.extend(range(k, l))
+
+        start = None
+        captured_text = ""
+        for index, value in enumerate(self.original_feed):
+            if index not in ignore_indexes:
+                if value == "\n":
+                    if captured_text:
+                        self.add_tok(PlainText(captured_text, start, index+1))
+                        captured_text = ""
+                        start = None
+                else:
+                    if start is None:
+                        start = index
+                    if value != "\n":
+                        captured_text += value
+            else:
+                if captured_text:
+                    self.add_tok(PlainText(captured_text, start, index + 1))
+                    captured_text = ""
+                    start = None
 
     def check_if_in_ignore(self, tok_type, start, end):
         for s, e in self.ignore:
