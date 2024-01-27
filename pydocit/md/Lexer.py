@@ -100,7 +100,7 @@ class PlainText(Token):
 
 
 class BoldText(Token):
-    re_pattern = re.compile(r"\*\*(.+?)\*\*", re.DOTALL | re.MULTILINE)
+    re_pattern = re.compile(r"(?<!\\)\*\*(.+?)(?!\\)\*(?!\\)\*", re.DOTALL | re.MULTILINE)
 
     def __init__(self, value, start, end):
         self.name = "BoldText"
@@ -112,7 +112,7 @@ class BoldText(Token):
 
 
 class ItalicText(Token):
-    re_pattern = re.compile(r"(?<!\*)\*(?!\*)(.+?)(?<!\*)\*(?!\*)")
+    re_pattern = re.compile(r"(?<!\*)(?<!\\)\*(.+?)(?<!\\)\*(?!\*)", re.DOTALL | re.MULTILINE)
 
     def __init__(self, value, start, end):
         self.name = "ItalicText"
@@ -124,7 +124,7 @@ class ItalicText(Token):
 
 
 class Link(Token):
-    re_pattern = re.compile(r"(?<!!)\[(?<!!)(?P<text>.+?)]\((?P<link>\S+)\)")
+    re_pattern = re.compile(r"(?<!!)(?<!\\)\[(?<!!)(?<!\\)(?P<text>.+?)(?<!\\)](?<!\\)\((?P<link>\S+)(?<!\\)\)")
 
     def __init__(self, text, link, start, end):
         self.name = "Link"
@@ -140,7 +140,7 @@ class Link(Token):
 
 
 class MultilineCode(Token):
-    re_pattern = re.compile(r"^`{3}(.+?)`{3}", re.DOTALL | re.MULTILINE)
+    re_pattern = re.compile(r"^(?<!\\)`{3}(.+?)(?<!\\)`{3}", re.DOTALL | re.MULTILINE)
 
     def __init__(self, value, start, end):
         self.name = "MultilineCode"
@@ -152,7 +152,7 @@ class MultilineCode(Token):
 
 
 class SingleLineCode(Token):
-    re_pattern = re.compile(r"(?<!`)`(?!`)(.+?)(?<!`)`(?!`)")
+    re_pattern = re.compile(r"(?<!`)(?<!\\)`(?!`)(.+?)(?<!\\)`(?!`)")
 
     def __init__(self, value, start, end):
         self.name = "SinglelineCode"
@@ -164,7 +164,7 @@ class SingleLineCode(Token):
 
 
 class TableHeader(Token):
-    re_pattern = re.compile(r"^\| +(.+) +\| *\n-{3,}", re.MULTILINE)
+    re_pattern = re.compile(r"^(?!\\)\| +(.+) +\| *\n(?<!\\)-{3,}$", re.MULTILINE)
 
     def __init__(self, value, start, end):
         self.name = "TableHeader"
@@ -176,7 +176,7 @@ class TableHeader(Token):
 
 
 class TableRow(Token):
-    re_pattern = re.compile(r"^\| +(.+) +\| *", re.MULTILINE)
+    re_pattern = re.compile(r"^(?<!\\)\| +(.+) +\| *", re.MULTILINE)
 
     def __init__(self, value, start, end):
         self.name = "TableRow"
@@ -213,7 +213,7 @@ class OrderedListItem(Token):
 
 class Image(Token):
     re_pattern = re.compile(
-        r"!\[(?P<alt>.+?)]\((?P<link>\S+)[\t ]+(?P<text>.+?)\)", re.MULTILINE
+        r"(?<!\\)!(?<!\\)\[(?P<alt>.+?)(?<!\\)](?<!\\)\((?P<link>\S+)[\t ]+(?P<text>.+?)(?<!\\)\)", re.MULTILINE
     )
 
     def __init__(self, alt, link, text, start, end):
