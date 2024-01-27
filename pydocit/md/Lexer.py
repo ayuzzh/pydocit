@@ -88,6 +88,8 @@ class Heading6(Token):
 
 
 class PlainText(Token):
+    re_pattern = re.compile(r"^(.+)", re.MULTILINE)
+
     def __init__(self, value, start, end):
         self.name = "PlainText"
         self.val = value
@@ -296,8 +298,8 @@ class Lexer:
         self.ignore = []
 
         self.table_header_start_index = []
-        self.table_header_end_index = []
         self.rows = []
+        self.multiline_code = []
 
     def tokenize(self):
         # tokenize_singleline_code is tokenized before headings
@@ -337,6 +339,7 @@ class Lexer:
             self.add_tok(tok)
 
             self.ignore.append((match.start(), match.end()))
+            self.multiline_code.append((match.start(), match.end()))
 
     def tokenize_h1(self):
         for match in Heading1.re_pattern.finditer(self.feed):
@@ -412,14 +415,13 @@ class Lexer:
             if not self.check_if_in_ignore(TableHeader, match.start(), match.end()):
                 self.add_tok(TableHeader(match.group(1), match.start(), match.end()))
                 self.table_header_start_index.append(match.start())
-                self.table_header_end_index.append(match.end())
 
     def tokenize_table_row(self):
         for match in TableRow.re_pattern.finditer(self.feed):
             if not self.check_if_in_ignore(TableRow, match.start(), match.end()):
                 if not match.start() in self.table_header_start_index:
                     self.add_tok(TableRow(match.group(1), match.start(), match.end()))
-                    self.rows.append((match.start(), match.end()))
+                    self.rows.append(match.start())
 
     def tokenize_unordered_list(self):
         for match in UnorderedListItem.re_pattern.finditer(self.feed):
@@ -466,45 +468,33 @@ class Lexer:
 
     def tokenize_newline(self):
         for match in NewLine.re_pattern.finditer(self.feed):
-            self.add_tok(NewLine(match.start()))
+            if not self.check_if_in_ignore("NewLine", match.start(), match.end()):
+                self.add_tok(NewLine(match.start()))
 
     def tokenize_text(self):
-        ignore_indexes = []
+        ignore = self.table_header_start_index + self.rows + [m[0] for m in self.ignore]
 
-        # Make a list of parts to ignore
-        # from including in plain text
-        for (k, l) in self.ignore:
-            ignore_indexes.extend(range(k, l))
-        for (k, l) in self.rows:
-            ignore_indexes.extend(range(k, l))
-        for k, l in zip(self.table_header_start_index, self.table_header_end_index):
-            ignore_indexes.extend(range(k, l))
-
-        start = None
-        captured_text = ""
-        for index, value in enumerate(self.feed):
-            if index not in ignore_indexes:
-                if value == "\n":
-                    if captured_text:
-                        self.add_tok(PlainText(captured_text, start, index+1))
-                        captured_text = ""
-                        start = None
-                else:
-                    if start is None:
-                        start = index
-                    if value != "\n":
-                        captured_text += value
-            else:
-                if captured_text:
-                    self.add_tok(PlainText(captured_text, start, index + 1))
-                    captured_text = ""
-                    start = None
+        for match in PlainText.re_pattern.finditer(self.feed):
+            if match.start() not in ignore:
+                if not self.check_if_in_mlc_ignore(match.start(), match.end()):
+                    if not re.match(r"^-{3,}$", match.group()):
+                        self.add_tok(PlainText(match.group(1), match.start(), match.end()))
 
     def check_if_in_ignore(self, tok_type, start, end):
         for s, e in self.ignore:
             if start > s and e > end:
                 if tok_type in ["BoldText", "ItalicText"]:
                     return False
+                return True
+        return False
+
+    def check_if_in_mlc_ignore(self, start, end):
+        for (s, e) in self.multiline_code:
+            if s == start:
+                return True
+            elif e == end:
+                return True
+            elif s < start and e > end:
                 return True
         return False
 
