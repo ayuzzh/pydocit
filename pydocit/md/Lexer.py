@@ -304,6 +304,9 @@ class Lexer:
     def tokenize(self):
         # tokenize_singleline_code is tokenized before headings
         # so that singleline code can be included in headings
+        if self.tokens:
+            return self.tokens
+
         self.tokenize_multiline_code()
         self.tokenize_singleline_code()
 
