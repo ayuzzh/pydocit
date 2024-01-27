@@ -20,6 +20,16 @@ md = """
 | R1C1 | R1C2 | R1C3 |
 | R2C1 | R2C2 | R3C3 |
 
+Python code
+```
+def example():
+    pass
+```
+Above is the Python Code in code block
+
+This is text with `single line code`
+This is text with **bold** and *italics*
+
 """
 
 lexer = Lexer(md)
