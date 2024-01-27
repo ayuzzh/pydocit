@@ -88,7 +88,7 @@ class Heading6(Token):
 
 
 class PlainText(Token):
-    re_pattern = re.compile(r"^(?!(- )|(\d+\. ))(.+)", re.MULTILINE)
+    re_pattern = re.compile(r"^(?!(- )|(\d+\. ))(?P<text>.+)", re.MULTILINE)
 
     def __init__(self, value, start, end):
         self.name = "PlainText"
@@ -442,9 +442,9 @@ class Lexer:
         for match in PlainText.re_pattern.finditer(self.feed):
             if match.start() not in ignore:
                 if not self.check_if_in_mlc_ignore(match.start(), match.end()):
-                    if not re.match(r"^-{3,}$", match.group()):
+                    if not re.match(r"^-{3,}$", match.group("text")):
                         self.add_tok(
-                            PlainText(match.group(1), match.start(), match.end())
+                            PlainText(match.group("text"), match.start(), match.end())
                         )
 
     def check_if_in_ignore(self, tok_type, start, end):
