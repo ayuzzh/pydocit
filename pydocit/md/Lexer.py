@@ -299,6 +299,8 @@ class Lexer:
         self.ignore = []
 
         self.table_header_start_index = []
+        self.table_header_end_index = []
+        self.rows = []
 
     def tokenize(self):
         # tokenize_singleline_code is tokenized before headings
@@ -411,12 +413,14 @@ class Lexer:
             if not self.check_if_in_ignore(TableHeader, match.start(), match.end()):
                 self.add_tok(TableHeader(match.group(1), match.start(), match.end()))
                 self.table_header_start_index.append(match.start())
+                self.table_header_end_index.append(match.end())
 
     def tokenize_table_row(self):
         for match in TableRow.re_pattern.finditer(self.feed):
             if not self.check_if_in_ignore(TableRow, match.start(), match.end()):
                 if not match.start() in self.table_header_start_index:
                     self.add_tok(TableRow(match.group(1), match.start(), match.end()))
+                    self.rows.append((match.start(), match.end()))
 
     def tokenize_unordered_list(self):
         for match in UnorderedListItem.re_pattern.finditer(self.feed):
