@@ -255,7 +255,7 @@ class ImageLink:
 
 
 class NewLine(Token):
-    re_pattern = re.compile(r"\n", re.MULTILINE)
+    re_pattern = re.compile(r"^\n", re.MULTILINE)
 
     def __init__(self, pos):
         self.name = "NewLine"
