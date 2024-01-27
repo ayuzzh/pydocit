@@ -186,7 +186,7 @@ class TableRow(Token):
 
 
 class UnorderedListItem(Token):
-    re_pattern = re.compile(r"^[\t ]*\*[\t ]+(.+)", re.MULTILINE)
+    re_pattern = re.compile(r"^[\t ]*-[\t ]+(.+)", re.MULTILINE)
 
     def __init__(self, value, start, end):
         self.name = "UnorderedListItem"
@@ -290,10 +290,7 @@ class Lexer:
     """
 
     def __init__(self, feed):
-        self.original_feed = feed
-
-        # It may be altered for preventing matching clashes
-        self.feed = self.original_feed
+        self.feed = feed
 
         self.tokens = []
         self.ignore = []
@@ -432,9 +429,6 @@ class Lexer:
                 self.add_tok(
                     UnorderedListItem(match.group(1), match.start(), match.end())
                 )
-                # For preventing the clash between italic matching
-                # and unordered list matching
-                self.alter_feed(match.start(), "-")
 
     def tokenize_ordered_list(self):
         for match in OrderedListItem.re_pattern.finditer(self.feed):
@@ -488,7 +482,7 @@ class Lexer:
 
         start = None
         captured_text = ""
-        for index, value in enumerate(self.original_feed):
+        for index, value in enumerate(self.feed):
             if index not in ignore_indexes:
                 if value == "\n":
                     if captured_text:
@@ -513,11 +507,6 @@ class Lexer:
                     return False
                 return True
         return False
-
-    def alter_feed(self, index, val):
-        feed_list = list(self.feed)
-        feed_list[index] = val
-        self.feed = "".join(feed_list)
 
     def add_tok(self, tok):
         for index, value in enumerate(self.tokens):
