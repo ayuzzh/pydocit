@@ -71,7 +71,7 @@ class Builder:
                 tree = ast.parse(file.read())
                 visitor.call_visit(tree)
 
-            self.final_build["content"][i["name"]] = {
+            self.final_build["content"][os.path.join(i["path"], i["name"])] = {
                 "name": i["name"],
                 "is_in_package": i["is_in_package"],
                 "path": i["path"],
