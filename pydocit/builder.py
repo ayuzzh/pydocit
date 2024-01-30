@@ -81,4 +81,4 @@ class Builder:
     def build(self) -> str:
         self.find_directories(self.path)
         self.compile_docs()
-        return json.dumps(self.final_build, indent=10)
+        return json.dumps(self.final_build, indent=2)
