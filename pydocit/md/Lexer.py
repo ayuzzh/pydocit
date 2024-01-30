@@ -2,8 +2,7 @@ import re
 
 
 class Token:
-    def __init__(self, name: str, value: str, start: int, end: int):
-        self.name = name
+    def __init__(self, value: str, start: int, end: int):
         self.val = value
         self.start = start
         self.end = end
@@ -17,114 +16,57 @@ class Token:
 
 class Heading1(Token):
     re_pattern = re.compile(r"^# +(.+)", re.MULTILINE)
-
-    def __init__(self, value, start, end):
-        self.name = "Heading1"
-        self.val = value
-        self.start = start
-        self.end = end
-
-        super().__init__(self.name, self.val, self.start, self.end)
+    name = "Heading1"
 
 
 class Heading2(Token):
     re_pattern = re.compile(r"^#{2} +(.+)", re.MULTILINE)
-
-    def __init__(self, value, start, end):
-        self.name = "Heading2"
-        self.val = value
-        self.start = start
-        self.end = end
-
-        super().__init__(self.name, self.val, self.start, self.end)
+    name = "Heading2"
 
 
 class Heading3(Token):
     re_pattern = re.compile(r"^#{3} +(.+)", re.MULTILINE)
-
-    def __init__(self, value, start, end):
-        self.name = "Heading3"
-        self.val = value
-        self.start = start
-        self.end = end
-
-        super().__init__(self.name, self.val, self.start, self.end)
+    name = "Heading3"
 
 
 class Heading4(Token):
     re_pattern = re.compile(r"^#{4} +(.+)", re.MULTILINE)
-
-    def __init__(self, value, start, end):
-        self.name = "Heading4"
-        self.val = value
-        self.start = start
-        self.end = end
-
-        super().__init__(self.name, self.val, self.start, self.end)
+    name = "Heading4"
 
 
 class Heading5(Token):
     re_pattern = re.compile(r"^#{5} +(.+)", re.MULTILINE)
-
-    def __init__(self, value, start, end):
-        self.name = "Heading5"
-        self.val = value
-        self.start = start
-        self.end = end
-
-        super().__init__(self.name, self.val, self.start, self.end)
+    name = "Heading5"
 
 
 class Heading6(Token):
     re_pattern = re.compile(r"^#{6} +(.+)", re.MULTILINE)
-
-    def __init__(self, value, start, end):
-        self.name = "Heading6"
-        self.val = value
-        self.start = start
-        self.end = end
-
-        super().__init__(self.name, self.val, self.start, self.end)
+    name = "Heading6"
 
 
 class PlainText(Token):
     re_pattern = re.compile(r"^(?!(- )|(\d+\. ))(?P<text>.+)", re.MULTILINE)
-
-    def __init__(self, value, start, end):
-        self.name = "PlainText"
-        self.val = value
-        self.start = start
-        self.end = end
-
-        super().__init__(self.name, self.val, self.start, self.end)
+    name = "PlainText"
 
 
 class BoldText(Token):
-    re_pattern = re.compile(r"(?<!\\)\*\*(.+?)(?!\\)\*(?!\\)\*", re.DOTALL | re.MULTILINE)
-
-    def __init__(self, value, start, end):
-        self.name = "BoldText"
-        self.val = value
-        self.start = start
-        self.end = end
-
-        super().__init__(self.name, self.val, self.start, self.end)
+    re_pattern = re.compile(
+        r"(?<!\\)\*\*(.+?)(?!\\)\*(?!\\)\*", re.DOTALL | re.MULTILINE
+    )
+    name = "BoldText"
 
 
 class ItalicText(Token):
-    re_pattern = re.compile(r"(?<!\*)(?<!\\)\*(.+?)(?<!\\)\*(?!\*)", re.DOTALL | re.MULTILINE)
-
-    def __init__(self, value, start, end):
-        self.name = "ItalicText"
-        self.val = value
-        self.start = start
-        self.end = end
-
-        super().__init__(self.name, self.val, self.start, self.end)
+    re_pattern = re.compile(
+        r"(?<!\*)(?<!\\)\*(.+?)(?<!\\)\*(?!\*)", re.DOTALL | re.MULTILINE
+    )
+    name = "ItalicText"
 
 
 class Link(Token):
-    re_pattern = re.compile(r"(?<!!)(?<!\\)\[(?<!!)(?<!\\)(?P<text>.+?)(?<!\\)](?<!\\)\((?P<link>\S+)(?<!\\)\)")
+    re_pattern = re.compile(
+        r"(?<!!)(?<!\\)\[(?<!!)(?<!\\)(?P<text>.+?)(?<!\\)](?<!\\)\((?P<link>\S+)(?<!\\)\)"
+    )
 
     def __init__(self, text, link, start, end):
         self.name = "Link"
@@ -133,7 +75,7 @@ class Link(Token):
         self.start = start
         self.end = end
 
-        super().__init__(self.name, self.val, self.start, self.end)
+        super().__init__(self.val, self.start, self.end)
 
     def __repr__(self):
         return f'{self.name}("{self.val}", "{self.link}", {self.start}, {self.end})'
@@ -148,72 +90,38 @@ class MultilineCode(Token):
         self.start = start
         self.end = end
 
-        super().__init__(self.name, self.val, self.start, self.end)
+        super().__init__(self.val, self.start, self.end)
 
 
 class SingleLineCode(Token):
     re_pattern = re.compile(r"(?<!`)(?<!\\)`(?!`)(.+?)(?<!\\)`(?!`)")
-
-    def __init__(self, value, start, end):
-        self.name = "SinglelineCode"
-        self.val = value
-        self.start = start
-        self.end = end
-
-        super().__init__(self.name, self.val, self.start, self.end)
+    name = "SinglelineCode"
 
 
 class TableHeader(Token):
     re_pattern = re.compile(r"^(?!\\)\| +(.+) +\| *\n(?<!\\)-{3,}$", re.MULTILINE)
-
-    def __init__(self, value, start, end):
-        self.name = "TableHeader"
-        self.val = value
-        self.start = start
-        self.end = end
-
-        super().__init__(self.name, self.val, self.start, self.end)
+    name = "TableHeader"
 
 
 class TableRow(Token):
     re_pattern = re.compile(r"^(?<!\\)\| +(.+) +\| *", re.MULTILINE)
-
-    def __init__(self, value, start, end):
-        self.name = "TableRow"
-        self.val = value
-        self.start = start
-        self.end = end
-
-        super().__init__(self.name, self.val, self.start, self.end)
+    name = "TableRow"
 
 
 class UnorderedListItem(Token):
     re_pattern = re.compile(r"^[\t ]*-[\t ]+(.+)", re.MULTILINE)
-
-    def __init__(self, value, start, end):
-        self.name = "UnorderedListItem"
-        self.val = value
-        self.start = start
-        self.end = end
-
-        super().__init__(self.name, self.val, self.start, self.end)
+    name = "UnorderedListItem"
 
 
 class OrderedListItem(Token):
     re_pattern = re.compile(r"^[\t ]*\d+\.[\t ]+(.+)", re.MULTILINE)
-
-    def __init__(self, value, start, end):
-        self.name = "OrderedListItem"
-        self.val = value
-        self.start = start
-        self.end = end
-
-        super().__init__(self.name, self.val, self.start, self.end)
+    name = "OrderedListItem"
 
 
 class Image(Token):
     re_pattern = re.compile(
-        r"(?<!\\)!(?<!\\)\[(?P<alt>.+?)(?<!\\)](?<!\\)\((?P<link>\S+)[\t ]+(?P<text>.+?)(?<!\\)\)", re.MULTILINE
+        r"(?<!\\)!(?<!\\)\[(?P<alt>.+?)(?<!\\)](?<!\\)\((?P<link>\S+)[\t ]+(?P<text>.+?)(?<!\\)\)",
+        re.MULTILINE,
     )
 
     def __init__(self, alt, link, text, start, end):
@@ -226,7 +134,7 @@ class Image(Token):
         self.start = start
         self.end = end
 
-        super().__init__(self.name, self.link, self.start, self.end)
+        super().__init__(self.link, self.start, self.end)
 
     def __repr__(self):
         return f'{self.name}("{self.alt}", "{self.link}", {self.text}, {self.start}, {self.end})'
@@ -240,7 +148,7 @@ class NewLine(Token):
         self.start = pos
         self.end = pos
 
-        super().__init__(self.name, "\n", self.start, self.end)
+        super().__init__("\n", self.start, self.end)
 
     def __repr__(self):
         return f"{self.name}({self.start})"
