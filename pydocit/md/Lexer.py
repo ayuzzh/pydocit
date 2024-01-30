@@ -364,14 +364,7 @@ class Lexer:
         return False
 
     def check_if_in_mlc_ignore(self, start, end):
-        for s, e in self.multiline_code:
-            if s == start:
-                return True
-            elif e == end:
-                return True
-            elif s < start and e > end:
-                return True
-        return False
+        return any(s <= start < e and s < end <= e for s, e in self.ignore)
 
     def add_tok(self, tok):
         for index, value in enumerate(self.tokens):
