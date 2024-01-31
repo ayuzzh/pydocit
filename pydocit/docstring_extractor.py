@@ -25,6 +25,7 @@ class Visitor(ast.NodeVisitor):
             "methods": {},
             "bases": bases,
             "docstring": ast.get_docstring(node),
+            "source": ast.unparse(node),
         }
         self.current_class = node.name
         self.generic_visit(node)
@@ -70,12 +71,14 @@ class Visitor(ast.NodeVisitor):
                     "args": args,
                     "docstring": ast.get_docstring(node),
                     "returns": returns,
+                    "source": ast.unparse(node),
                 }
             else:
                 self.functions[node.name] = {
                     "args": args,
                     "docstring": ast.get_docstring(node),
                     "returns": returns,
+                    "source": ast.unparse(node),
                 }
 
         # For wrapping up the function

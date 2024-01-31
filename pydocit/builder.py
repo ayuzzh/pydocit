@@ -68,7 +68,8 @@ class Builder:
         for i in self.files:
             visitor = Visitor()
             with open(i["path"], encoding="utf8") as file:
-                tree = ast.parse(file.read())
+                source = file.read())
+                tree = ast.parse(source)
                 visitor.call_visit(tree)
 
             self.final_build["content"][os.path.join(i["path"], i["name"])] = {
@@ -76,6 +77,7 @@ class Builder:
                 "is_in_package": i["is_in_package"],
                 "path": i["path"],
                 "docs": visitor.out(),
+                "source": source,
             }
 
     def build(self) -> str:
