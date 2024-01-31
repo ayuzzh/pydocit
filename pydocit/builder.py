@@ -66,7 +66,7 @@ class Builder:
         for i in self.files:
             visitor = Visitor()
             with open(i["path"], encoding="utf8") as file:
-                source = file.read())
+                source = file.read()
                 tree = ast.parse(source)
                 visitor.call_visit(tree)
 
