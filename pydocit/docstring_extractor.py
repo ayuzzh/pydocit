@@ -1,5 +1,4 @@
 import ast
-import astunparse
 
 
 class Visitor(ast.NodeVisitor):
@@ -18,7 +17,7 @@ class Visitor(ast.NodeVisitor):
     def visit_ClassDef(self, node):
         bases = []
         for i in node.bases:
-            bases.append(astunparse.unparse(i))
+            bases.append(ast.unparse(i))
 
         self.classes[node.name] = {
             "name": node.name,
@@ -34,21 +33,21 @@ class Visitor(ast.NodeVisitor):
     def visit_FunctionDef(self, node):
         returns = None
         if node.returns is not None:
-            returns = astunparse.unparse(node.returns)
+            returns = ast.unparse(node.returns)
 
         args = {}
         list_of_args = []
 
         for i in node.args.args:
-            _source = astunparse.unparse(i)
+            _source = ast.unparse(i)
 
             annotation = None
             if i.annotation is not None:
-                annotation = astunparse.unparse(i.annotation)
+                annotation = ast.unparse(i.annotation)
 
             type_comment = None
             if i.type_comment is not None:
-                type_comment = astunparse.unparse(i.type_comment)
+                type_comment = ast.unparse(i.type_comment)
 
             list_of_args.append(i.arg)
             args[i.arg] = {
@@ -62,7 +61,7 @@ class Visitor(ast.NodeVisitor):
         for m, n in zip(reversed(node.args.defaults), reversed(list_of_args)):
             default = None
             if m is not None:
-                default = astunparse.unparse(m)
+                default = ast.unparse(m)
             args[n]["default"] = default
 
         if self.current_function is None:

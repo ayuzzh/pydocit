@@ -4,9 +4,7 @@ setup(
     name="pydocit",
     version="0.1",
     packages=find_packages(),
-    install_requires=[
-        "astunparse==1.6.3",
-    ],
+    install_requires=[],
     author="Ayush K M",
     author_email="ayushkm0000@gmail.com",
     description=" ",
