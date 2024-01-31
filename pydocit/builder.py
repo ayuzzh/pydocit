@@ -19,9 +19,7 @@ class Builder:
     ):
         self.name = name
         self.path: str = path
-        self.exclude_directories = None
-        if exclude_directories is not None:
-            self.exclude_directories: Optional[List[str]] = exclude_directories
+        self.exclude_directories = exclude_directories
         self.recursive_search: bool = recursive_search
 
         self.included_packages = []
